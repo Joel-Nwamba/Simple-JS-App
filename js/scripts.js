@@ -6,7 +6,7 @@ let pokemonRepository = (function(){
    function add(pokemon){
     if (typeof pokemon === "object" &&
     "name" in pokemon &&
-    "detailsUrl" in pokemon
+    "urlDetail" in pokemon
     ) {
      pokemonList.push(pokemon);
   } else {
@@ -26,7 +26,7 @@ let pokemonRepository = (function(){
         let button = document.createElement('button');
         button.innerText = pokemon.name;
         button.classList.add('class-button');
-        pokemonList.appendChild(pokemonlist);
+        pokemonList.appendChild(listpokemon);
         listpokemon.appendChild(button);
         button.addEventListener('click', function(event){
             showDetails(pokemon);
@@ -48,14 +48,24 @@ let pokemonRepository = (function(){
             console.error(e);
         })
     }
-function loadDetails(){
-
+function loadDetails(item){
+    let url = item.urlDetail;
+    return fetch(url).then(function(response){
+        return response.json();
+    }).then(function(details){
+        item.imageUrl = details.sprites.front_default;
+        item.height = details.height;
+        item.type = details.types;
+    }).catch(function(e){
+        console.error(e);
+    })
 }
 
-
 // Function is linked to AddListItem & called on addEventListner 'click'
-     function showDetails(pokemonOne) {
-        console.log(pokemonOne);
+     function showDetails(item) {
+         loadDetails(item).then(function(){
+             console.log(item);
+         })
      }
 
 // return is necessary in order push the resullts
@@ -63,7 +73,9 @@ function loadDetails(){
         getAll: getAll,
         add: add,
         addListItem: addListItem,
-        loadList: loadList
+        loadList: loadList,
+        loadDetails: loadDetails,
+        showDetails: showDetails
     }
     
 
