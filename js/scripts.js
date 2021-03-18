@@ -1,27 +1,23 @@
 //IIFE for pokemonRepository
 let pokemonRepository = (function(){
-   let pokemonList = [{
-        name: 'Bulbasaur',
-        height: 0.7,
-        types:['grass', 'poison']
-    },
-    {
-        name: 'Charizard',
-        height: 1.7,
-        types: ['Fire', 'Flying']
-    },
-    {
-        name: 'Pikachu',
-        height: 0.4,
-        types: ['Electric']
-    }];
+   let pokemonList = [];
+   let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
     function getAll() {
         return pokemonList
     }
-    function add(item){
-        pokemonList.push(item)
-    }
+    function add(pokemon){
+        if (typeof pokemon === "object" &&
+        "name" in pokemon &&
+        "detailsUrl" in pokemon
+        ) {
+        pokemonList.push(pokemon);
+      } else {
+        console.log("pokemon is not correct");
+      } 
+        }
+
+
 //This functions allows interaction to take place on the web.
     function addListItem(pokemonOne){
         let pokemon = document.querySelector('.pokemon-list');
@@ -35,23 +31,49 @@ let pokemonRepository = (function(){
             showDetails(pokemonOne);
         })
      }
+     function loadList() {
+        return fetch(apiUrl).then(function(response){
+            return response.json();
+        }).then(function(json) {
+           json.results.forEach(function(item){
+               let pokemonApp = {
+                   name: item.name,
+                   urlDetail: item.url
+               }
+               add(pokemonApp)
+               console.log(pokemonApp);
+           });
+        }).catch(function(e){
+            console.error(e);
+        })
+    }
+function loadDetails(){
+
+}
+
+
 // Function is linked to AddListItem & called on addEventListner 'click'
      function showDetails(pokemonOne) {
         console.log(pokemonOne);
      }
+
 // return is necessary in order push the resullts
     return {
         getAll: getAll,
         add: add,
-        addListItem: addListItem
+        addListItem: addListItem,
+        loadList: loadList
     }
     
 
 })();
 // This generates the result from the code.
-pokemonRepository.getAll().forEach(function(pokemonOne){
-    pokemonRepository.addListItem(pokemonOne);
-})
+pokemonRepository.loadList().then(function(){
+    pokemonRepository.getAll().forEach(function(pokemonOne){
+        pokemonRepository.addListItem(pokemonOne);
+    });
+});
+
 
 
 
