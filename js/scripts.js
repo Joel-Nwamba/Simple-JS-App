@@ -32,6 +32,7 @@ let pokemonRepository = (function(){
             showDetails(pokemon);
         })
      }
+     //We are fetching information to all the pokemon listed.
      function loadList() {
         return fetch(apiUrl).then(function(response){
             return response.json();
@@ -48,6 +49,7 @@ let pokemonRepository = (function(){
             console.error(e);
         })
     }
+    //we are fetching formation from loadList
 function loadDetails(item){
     let url = item.urlDetail;
     return fetch(url).then(function(response){
@@ -63,10 +65,60 @@ function loadDetails(item){
 
 // Function is linked to AddListItem & called on addEventListner 'click'
      function showDetails(item) {
-         loadDetails(item).then(function(){
-             console.log(item);
+         
+        loadDetails(item).then(function(){
+             
+            let modalContainer = document.querySelector('div');
+             //clear modal
+             modalContainer.innerHTML = '';
+
+             //build modal by section 
+
+             let detailModal = document.createElement('div');
+             detailModal.classList.add('detail_modal');
+
+
+             let pokemonName = document.createElement('h1');
+             pokemonName.classList.add('modal_details--pokemon');
+             pokemonName.innerText = pokemon.name;
+
+             let pokemonImage = document.createElement('img');
+             pokemonImage.classList.add('modal_image');
+             pokemonImage.src = pokemon.imageUrl;
+
+             let pokemonHeight = document.createElement('p');
+             pokemonHeight.classList.add('modal_details--pokemon');
+             pokemonHeight.innerText = 'height: ' + pokemon.height + ' m';
+
+             let pokemonWeight = document.createElement('p');
+             pokemonWeight.classList.add('modal_details--pokemon');
+             pokemonWeight.innerText = 'weight: ' + pokemon.weight + ' kg';
+
+             let pokemonType = document.createElement('p');
+             pokemonType.classList.add('modal_details--pokemon');
+             pokemonType.innerText = pokemon.types;
+
+             let pokemonAbility = document.createElement('p');
+             pokemonAbility.classList.add('modal_details--pokemon');
+             pokemonAbility.innerText = pokemon.abilities
+
+             detailModal.appendChild(pokemonName);
+             detailModal.appendChild(pokemonImage);
+             detailModal.appendChild(pokemonHeight);
+             detailModal.appendChild(pokemonWeight);
+             detailModal.appendChild(pokemonWeight);
+             detailModal.appendChild(pokemonType);
+             detailModal.appendChild(pokemonAbility);
+             modalContainer.appendChild(detailModal);
+
+
+
+             modalContainer.classList.add('is-visible');
+
          })
      }
+
+    
 
 // return is necessary in order push the resullts
     return {
