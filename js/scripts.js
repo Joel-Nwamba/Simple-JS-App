@@ -64,11 +64,11 @@ function loadDetails(item){
 }
 
 // Function is linked to AddListItem & called on addEventListner 'click'
-     function showDetails(item) {
+     function showDetails(pokemon) {
          
-        loadDetails(item).then(function(){
+        loadDetails(pokemon).then(function(){
              
-            let modalContainer = document.querySelector('div');
+            let modalContainer = document.querySelector('#modal-container');
              //clear modal
              modalContainer.innerHTML = '';
 
@@ -102,6 +102,11 @@ function loadDetails(item){
              pokemonAbility.classList.add('modal_details--pokemon');
              pokemonAbility.innerText = pokemon.abilities
 
+             let closeButton = document.createElement('button');
+             closeButton.classList.add('modal-close');
+             closeButton.innerText = 'Close';
+             closeButton.addEventListener('click', hideModal);
+
              detailModal.appendChild(pokemonName);
              detailModal.appendChild(pokemonImage);
              detailModal.appendChild(pokemonHeight);
@@ -109,13 +114,19 @@ function loadDetails(item){
              detailModal.appendChild(pokemonWeight);
              detailModal.appendChild(pokemonType);
              detailModal.appendChild(pokemonAbility);
+             detailModal.appendChild(closeButton);
              modalContainer.appendChild(detailModal);
 
 
 
              modalContainer.classList.add('is-visible');
 
-         })
+         });
+     };
+
+     function hideModal() {
+         let modalContainer = document.querySelector('#modal-container');
+         modalContainer.classList.remove('is-visible');
      }
 
     
