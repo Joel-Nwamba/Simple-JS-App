@@ -120,14 +120,26 @@ function loadDetails(item){
 
 
              modalContainer.classList.add('is-visible');
+             function hideModal() {
+                let modalContainer = document.querySelector('#modal-container');
+                modalContainer.classList.remove('is-visible');
+            }
+            window.addEventListener('keydown', (e) => {
+                let modalContainer = document.querySelector('#modal-container');
+                if(e.key === 'Escape' && modalContainer.classList.contains('is-visible')){
+                    hideModal();
+                }
+            });
+            modalContainer.addEventListener('click', (e) => {
+                let target = e.target;
+                if (target === modalContainer) {
+                  hideModal();
+                }
+              });
 
          });
      };
 
-     function hideModal() {
-         let modalContainer = document.querySelector('#modal-container');
-         modalContainer.classList.remove('is-visible');
-     }
 
     
 
