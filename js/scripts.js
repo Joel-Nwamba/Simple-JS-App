@@ -63,6 +63,7 @@ let pokemonRepository = (function () {
           item.imageUrl = details.sprites.front_default;
           item.height = details.height;
           item.type = details.types;
+          item.ability = details.abilities;
         })
         .catch(function (e) {
           console.error(e);
@@ -93,6 +94,14 @@ let pokemonRepository = (function () {
         pokemonHeight.classList.add('modal_details--pokemon');
         pokemonHeight.innerText = 'height: ' + pokemon.height +  ' m';
 
+        let pokemonAbility = document.createElement('p');
+        pokemonAbility.classList.add('modal_details--pokemon');
+        pokemonAbility.innerText = pokemon.abilities;
+
+        let pokemonType = document.createElement('p');
+        pokemonType.classList.add('modal_details--pokemon');
+        pokemonType.innerText = pokemon.types;
+
         let closeButton = document.createElement('button');
         closeButton.classList.add('modal-close');
         closeButton.innerText = 'Close';
@@ -103,6 +112,8 @@ let pokemonRepository = (function () {
         detailModal.appendChild(pokemonName);
         detailModal.appendChild(pokemonImage);
         detailModal.appendChild(pokemonHeight);
+        detailModal.appendChild(pokemonAbility);
+        detailModal.appendChild(pokemonType);
         detailModal.appendChild(closeButton);
         modalContainer.appendChild(detailModal);
   
