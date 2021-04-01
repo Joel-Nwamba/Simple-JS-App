@@ -2,6 +2,7 @@
 let pokemonRepository = (function () {
     let pokemonList = [];
     let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
+    let searchInputSelection = document.querySelector('#search-option');
   
     function add(pokemon) {
       if (
@@ -21,14 +22,21 @@ let pokemonRepository = (function () {
   
     //This functions allows interaction to take place on the web.
     function addListItem(pokemon) {
-      let pokemonList = document.querySelector('.pokemon-list');
+      let pokemonList = document.querySelector('.list-group');
       let listpokemon = document.createElement('li');
+      listpokemon.classList.add('group-list-item');
       let button = document.createElement('button');
       button.innerText = pokemon.name;
-      button.classList.add('class-button');
+      button.classList.add('btn');
+      button.classList.add('btn-light');
+      button.classList.add('btn-block');
+      button.classList.add('btn-lg');
+      button.classList.add('bg-link');
+      button.setAttribute('data-target', '#pokedexModal');
+      button.setAttribute('data-toggle', 'modal');
       pokemonList.appendChild(listpokemon);
       listpokemon.appendChild(button);
-      button.addEventListener('click', function (event) {
+      button.addEventListener('click', function () {
         showDetails(pokemon);
       });
     }
@@ -62,8 +70,14 @@ let pokemonRepository = (function () {
         .then(function (details) {
           item.imageUrl = details.sprites.front_default;
           item.height = details.height;
-          item.type = details.types;
-          item.ability = details.abilities;
+          item.types = [];
+          details.types.forEach(function(itemType){
+            item.types.push(itemType.type.name);
+          });
+          item.abilities = [];
+          details.abilities.forEach(function(itemAbilities){
+            item.abilities.push(itemAbilities.ability.name);
+          })
         })
         .catch(function (e) {
           console.error(e);
@@ -73,72 +87,48 @@ let pokemonRepository = (function () {
     // Function is linked to AddListItem & called on addEventListner 'click'
     function showDetails(pokemon) {
       loadDetails(pokemon).then(function () {
-        let modalContainer = document.querySelector('#modal-container');
-        //clear modal
-        modalContainer.innerHTML = '';
-  
-        //build modal by section
-  
-        let detailModal = document.createElement('div');
-        detailModal.classList.add('detail_modal');
-  
-        let pokemonName = document.createElement('h1');
-        pokemonName.classList.add('modal_details--pokemon');
-        pokemonName.innerText = pokemon.name;
-  
-        let pokemonImage = document.createElement('img');
-        pokemonImage.classList.add('modal_image');
-        pokemonImage.src = pokemon.imageUrl;
-  
-        let pokemonHeight = document.createElement('p');
-        pokemonHeight.classList.add('modal_details--pokemon');
-        pokemonHeight.innerText = 'height: ' + pokemon.height +  ' m';
 
-        let pokemonAbility = document.createElement('p');
-        pokemonAbility.classList.add('modal_details--pokemon');
-        pokemonAbility.innerText = pokemon.abilities;
+        let modalBody = $('.modal-body');
+        let modalTitle = $('.modal-title');
+        let modalHeader = $('modal-header');
 
-        let pokemonType = document.createElement('p');
-        pokemonType.classList.add('modal_details--pokemon');
-        pokemonType.innerText = pokemon.types;
-
-        let closeButton = document.createElement('button');
-        closeButton.classList.add('modal-close');
-        closeButton.innerText = 'Close';
-        //Allows to close button by clicking on it 
-        closeButton.addEventListener('click', hideModal);
-
+        //modalHeader.empty();
+        modalTitle.empty();
+        modalBody.empty();
   
-        detailModal.appendChild(pokemonName);
-        detailModal.appendChild(pokemonImage);
-        detailModal.appendChild(pokemonHeight);
-        detailModal.appendChild(pokemonAbility);
-        detailModal.appendChild(pokemonType);
-        detailModal.appendChild(closeButton);
-        modalContainer.appendChild(detailModal);
+        let pokemonName = $('<h1>' + pokemon.name + '</h1>');
   
-        modalContainer.classList.add('is-visible');
+        let pokemonImage = $('<img class="modal-img" style="width: 5%">');
+         pokemonImage.attr('src', pokemon.imageUrl);
+       
+  
+        let pokemonHeight = $('<p>' + 'Height: ' + pokemon.height + '</p>');
+
+
+        let pokemonAbility = $('<p>' + 'ability: ' + pokemon.abilities + '</p>');
+
+        let pokemonType = $('<p>' + 'type: ' + pokemon.types + '</p>');
+
+       modalTitle.append(pokemonName);
+       modalBody.append(pokemonImage);
+       modalBody.append(pokemonHeight);
+       modalBody.append(pokemonAbility);
+       modalBody.append(pokemonType);
+
       });
-      //This is connected to closeButton
-      function hideModal() {
-          let modalContainer = document.querySelector('#modal-container');
-          modalContainer.classList.remove('is-visible');
-      }
-      //Allows you to press the escape button
-      window.addEventListener('keydown', (e) => {
-          let modalContainer = document.querySelector('#modal-container');
-          if(e.key === 'Escape' && modalContainer.classList.contains("is-visible")){
-              hideModal();
+      searchInputSelection.addEventListener('input', function() {
+        let allPokemonList = document.querySelectorAll('.group-list-item');
+        let filterValue = searchInputSelection.value().toUpperCase();
+        allPokemonList.forEach(function(item){
+          console.log(item.innerText);
+          if(item.innerText.toUpperCase().indexOf(filterValue) > -1){
+            item.style.display = '';
+          }else{
+            item.style.display = none;
           }
-      });
-      //Allows you to click out to escape
-      let modalContainer = document.querySelector('#modal-container');
-      modalContainer.addEventListener('click', (e) => {
-        let target = e.target;
-        if (target === modalContainer) {
-          hideModal();
-        }
-      });
+        })
+      })
+      
     }
   
     // return is necessary in order push the resullts
