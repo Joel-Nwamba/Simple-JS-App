@@ -3,6 +3,21 @@ let pokemonRepository = (function () {
     let pokemonList = [];
     let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
     let searchInputSelection = document.querySelector('#search-option');
+    //console.log(searchInputSelection);
+    searchInputSelection.addEventListener('input', function() {
+      let allPokemonList = document.querySelectorAll('.group-list-item');
+      let filterValue = searchInputSelection.value.toUpperCase();
+      console.log(allPokemonList);
+      
+      allPokemonList.forEach(function(item){
+        console.log(item.innerText);
+        if(item.innerText.toUpperCase().indexOf(filterValue) > -1){
+          item.style.display = '';
+        }else{
+          item.style.display = 'none';
+        }
+      })
+    });
   
     function add(pokemon) {
       if (
@@ -32,8 +47,8 @@ let pokemonRepository = (function () {
       button.classList.add('btn-block');
       button.classList.add('btn-lg');
       button.classList.add('bg-link');
-      button.setAttribute('data-target', '#pokedexModal');
       button.setAttribute('data-toggle', 'modal');
+      button.setAttribute('data-target', '#pokedexModal');
       pokemonList.appendChild(listpokemon);
       listpokemon.appendChild(button);
       button.addEventListener('click', function () {
@@ -90,7 +105,7 @@ let pokemonRepository = (function () {
 
         let modalBody = $('.modal-body');
         let modalTitle = $('.modal-title');
-        let modalHeader = $('modal-header');
+        //let modalHeader = $('modal-header');
 
         //modalHeader.empty();
         modalTitle.empty();
@@ -98,7 +113,7 @@ let pokemonRepository = (function () {
   
         let pokemonName = $('<h1>' + pokemon.name + '</h1>');
   
-        let pokemonImage = $('<img class="modal-img" style="width: 5%">');
+        let pokemonImage = $('<img class="modal-img" style="width: 50%">');
          pokemonImage.attr('src', pokemon.imageUrl);
        
   
@@ -116,18 +131,6 @@ let pokemonRepository = (function () {
        modalBody.append(pokemonType);
 
       });
-      searchInputSelection.addEventListener('input', function() {
-        let allPokemonList = document.querySelectorAll('.group-list-item');
-        let filterValue = searchInputSelection.value().toUpperCase();
-        allPokemonList.forEach(function(item){
-          console.log(item.innerText);
-          if(item.innerText.toUpperCase().indexOf(filterValue) > -1){
-            item.style.display = '';
-          }else{
-            item.style.display = none;
-          }
-        })
-      })
       
     }
   
