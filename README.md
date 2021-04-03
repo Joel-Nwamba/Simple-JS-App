@@ -1,1 +1,2 @@
 # Simple-JS-App
+The key objective is to build a small Pokemon web application with HTML, CSS, and JavaScript that loads data from an external API and enables the viewing of data points in detail, such as pictures poping up, the height, type, and bilities of pokemon.

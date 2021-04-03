@@ -1,7 +1,7 @@
 //IIFE for pokemonRepository
 let pokemonRepository = (function () {
     let pokemonList = [];
-    let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
+    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
     let searchInputSelection = document.querySelector('#search-option');
     //console.log(searchInputSelection);
     searchInputSelection.addEventListener('input', function() {
